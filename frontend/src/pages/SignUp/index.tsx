@@ -18,6 +18,7 @@ import AppTheme from '@/theme/shared-theme/AppTheme';
 import AppAppBar from '@/pages/MarketingPage/components/AppAppBar';
 import FormHelperText from '@mui/material/FormHelperText';
 import Grid from '@mui/material/Grid';
+import Diversity1Icon from '@mui/icons-material/Diversity1';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -78,7 +79,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
 
     if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
       setEmailError(true);
-      setEmailErrorMessage('Please enter a valid email address.');
+      setEmailErrorMessage('Lütfen geçerli bir e-posta adresi girin.');
       isValid = false;
     } else {
       setEmailError(false);
@@ -87,7 +88,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
 
     if (!password.value || password.value.length < 6) {
       setPasswordError(true);
-      setPasswordErrorMessage('Password must be at least 6 characters long.');
+      setPasswordErrorMessage('Şifre en az 6 karakter uzunluğunda olmalıdır.');
       isValid = false;
     } else {
       setPasswordError(false);
@@ -96,7 +97,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
 
     if (!name.value || name.value.length < 1) {
       setNameError(true);
-      setNameErrorMessage('Name is required.');
+      setNameErrorMessage('Ad alanı zorunludur.');
       isValid = false;
     } else {
       setNameError(false);
@@ -131,29 +132,46 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
             variant="h4"
             sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
           >
-            Sign up
+            Gönüllü Ol
           </Typography>
           <Box
             component="form"
             onSubmit={handleSubmit}
             sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
           >
+            <Grid container spacing={2}>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <FormControl>
+                  <FormLabel htmlFor="name">Ad</FormLabel>
+                  <TextField
+                    autoComplete="given-name"
+                    name="name"
+                    required
+                    fullWidth
+                    id="name"
+                    placeholder="Jon"
+                    error={nameError}
+                    helperText={nameErrorMessage}
+                    color={nameError ? 'error' : 'primary'}
+                  />
+                </FormControl>
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <FormControl>
+                  <FormLabel htmlFor="lastName">Soyad</FormLabel>
+                  <TextField
+                    autoComplete="family-name"
+                    name="lastName"
+                    required
+                    fullWidth
+                    id="lastName"
+                    placeholder="Snow"
+                  />
+                </FormControl>
+              </Grid>
+            </Grid>
             <FormControl>
-              <FormLabel htmlFor="name">Full name</FormLabel>
-              <TextField
-                autoComplete="name"
-                name="name"
-                required
-                fullWidth
-                id="name"
-                placeholder="Jon Snow"
-                error={nameError}
-                helperText={nameErrorMessage}
-                color={nameError ? 'error' : 'primary'}
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel htmlFor="email">Email</FormLabel>
+              <FormLabel htmlFor="email">E-posta</FormLabel>
               <TextField
                 required
                 fullWidth
@@ -168,7 +186,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
               />
             </FormControl>
             <FormControl>
-              <FormLabel htmlFor="password">Password</FormLabel>
+              <FormLabel htmlFor="password">Şifre</FormLabel>
               <TextField
                 required
                 fullWidth
@@ -185,25 +203,26 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
             </FormControl>
             <FormControlLabel
               control={<Checkbox value="allowExtraEmails" color="primary" />}
-              label="I want to receive updates via email."
+              label="Pazarlama ve promosyon e-postaları almak istiyorum."
             />
             <Button
               type="submit"
               fullWidth
               variant="contained"
               onClick={validateInputs}
+              startIcon={<Diversity1Icon />}
             >
-              Sign up
+              Gönüllü Ol
             </Button>
             <Typography sx={{ textAlign: 'center' }}>
-              Already have an account?{' '}
+              Zaten bir hesabın var mı?{' '}
               <Link
                 component={RouterLink}
                 to="/signin"
                 variant="body2"
                 sx={{ alignSelf: 'center' }}
               >
-                Sign in
+                Giriş yap
               </Link>
             </Typography>
           </Box>

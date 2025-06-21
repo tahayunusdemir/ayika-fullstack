@@ -13,7 +13,8 @@ import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ColorModeIconDropdown from '@/theme/shared-theme/ColorModeIconDropdown';
-import Sitemark from './SitemarkIcon';
+import AyikaIcon from './AyikaIcon';
+import Diversity1Icon from '@mui/icons-material/Diversity1';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
@@ -66,50 +67,65 @@ export default function AppAppBar() {
       <Container maxWidth="lg">
         <StyledToolbar variant="dense" disableGutters>
           <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
-            <Link to="/" style={{ textDecoration: 'none' }}>
-              <Sitemark />
+            <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <AyikaIcon />
             </Link>
-            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+            <Box sx={{ display: { xs: 'none', md: 'flex' }, ml: 2 }}>
               <Button
                 variant="text"
                 color="info"
                 size="small"
-                onClick={() => scrollToSection('features')}
+                component={Link}
+                to="/#features"
               >
-                Features
+                Özellikler
               </Button>
               <Button
                 variant="text"
                 color="info"
                 size="small"
-                onClick={() => scrollToSection('testimonials')}
+                component={Link}
+                to="/#highlights"
               >
-                Testimonials
+                Öne Çıkanlar
               </Button>
               <Button
                 variant="text"
                 color="info"
                 size="small"
-                onClick={() => scrollToSection('highlights')}
+                component={Link}
+                to="/#team"
               >
-                Highlights
+                Ekibimiz
               </Button>
               <Button
                 variant="text"
                 color="info"
                 size="small"
-                onClick={() => scrollToSection('pricing')}
+                component={Link}
+                to="/#faq"
               >
-                Pricing
+                SSS
               </Button>
               <Button
                 variant="text"
                 color="info"
                 size="small"
-                sx={{ minWidth: 0 }}
-                onClick={() => scrollToSection('faq')}
+                component={Link}
+                to="/#supporters"
               >
-                FAQ
+                Destekçilerimiz
+              </Button>
+              <Button
+                variant="text"
+                color="info"
+                size="small"
+                component="a"
+                href="https://docs.google.com/forms/d/12Lw1k2e3hpawyUF-pVSG04n-MFIK1kx96PRtG5ZtzL0/edit"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                İletişim
               </Button>
             </Box>
           </Box>
@@ -122,12 +138,17 @@ export default function AppAppBar() {
           >
             <Link to="/signin" style={{ textDecoration: 'none' }}>
               <Button color="primary" variant="text" size="small">
-                Sign in
+                Giriş yap
               </Button>
             </Link>
             <Link to="/signup" style={{ textDecoration: 'none' }}>
-              <Button color="primary" variant="contained" size="small">
-                Sign up
+              <Button
+                color="primary"
+                variant="contained"
+                size="small"
+                startIcon={<Diversity1Icon />}
+              >
+                Gönüllü Ol
               </Button>
             </Link>
             <ColorModeIconDropdown />
@@ -159,27 +180,47 @@ export default function AppAppBar() {
                   </IconButton>
                 </Box>
 
-                <MenuItem onClick={() => scrollToSection('features')}>Features</MenuItem>
-                <MenuItem onClick={() => scrollToSection('testimonials')}>
-                  Testimonials
+                <MenuItem component={Link} to="/#features" onClick={() => setOpen(false)}>
+                  Özellikler
                 </MenuItem>
-                <MenuItem onClick={() => scrollToSection('highlights')}>
-                  Highlights
+                <MenuItem component={Link} to="/#highlights" onClick={() => setOpen(false)}>
+                  Öne Çıkanlar
                 </MenuItem>
-                <MenuItem onClick={() => scrollToSection('pricing')}>Pricing</MenuItem>
-                <MenuItem onClick={() => scrollToSection('faq')}>FAQ</MenuItem>
+                <MenuItem component={Link} to="/#team" onClick={() => setOpen(false)}>
+                  Ekibimiz
+                </MenuItem>
+                <MenuItem component={Link} to="/#faq" onClick={() => setOpen(false)}>
+                  SSS
+                </MenuItem>
+                <MenuItem component={Link} to="/#supporters" onClick={() => setOpen(false)}>
+                  Destekçilerimiz
+                </MenuItem>
+                <MenuItem
+                  component="a"
+                  href="https://docs.google.com/forms/d/12Lw1k2e3hpawyUF-pVSG04n-MFIK1kx96PRtG5ZtzL0/edit"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setOpen(false)}
+                >
+                  İletişim
+                </MenuItem>
                 <Divider sx={{ my: 3 }} />
                 <MenuItem>
                   <Link to="/signup" style={{ textDecoration: 'none', width: '100%' }}>
-                    <Button color="primary" variant="contained" fullWidth>
-                      Sign up
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      fullWidth
+                      startIcon={<Diversity1Icon />}
+                    >
+                      Gönüllü Ol
                     </Button>
                   </Link>
                 </MenuItem>
                 <MenuItem>
                   <Link to="/signin" style={{ textDecoration: 'none', width: '100%' }}>
                     <Button color="primary" variant="outlined" fullWidth>
-                      Sign in
+                      Giriş yap
                     </Button>
                   </Link>
                 </MenuItem>

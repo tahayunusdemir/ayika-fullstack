@@ -1,12 +1,23 @@
 # Öğrenim Günlüğü
 
-Bu dosyada, proje kurulumu ve geliştirme sürecinde karşılaşılan sorunlar, alınan kararlar ve önemli notlar yer almaktadır.
+Bu dosya, Ayika projesinin geliştirme sürecinde karşılaşılan zorlukları, alınan kararları ve öğrenilen dersleri belgelemek amacıyla oluşturulmuştur.
 
 Bu günlük, `TODO-2.md` görevleri sırasında karşılaşılan sorunları, alınan kararları ve önemli notları içerir.
 
 Bu günlük, `TODO-1.md` dosyasındaki adımlar takip edilerek yapılan proje kurulumu sırasında alınan notları içerir.
 
 Bu günlük, `TODO-3.md` görevleri uygulanırken karşılaşılan sorunları, alınan kararları ve öğrenilen dersleri belgelemek için oluşturulmuştur.
+
+## Bölüm 1: Marka Adını Güncelleme
+
+- **Yapılan İşlemler:**
+  - Proje genelinde `Sitemark` markası `ayika` olarak güncellendi.
+  - `SitemarkIcon.tsx` bileşeni silinerek yerine metin tabanlı `AyikaIcon.tsx` bileşeni getirildi.
+  - Marka adı ve logosunu kullanan tüm dosya ve bileşenler (`AppAppBar`, `Footer`, `SideMenu`, `Copyright` vb.) yeni marka kimliğine uygun olarak güncellendi.
+- **Karşılaşılan Zorluklar:**
+  - `edit_file` aracının `SideMenu.tsx` ve `CustomIcons.tsx` dosyalarında beklenmedik ve hatalı kod eklemeleri yapması üzerine, doğru içeriği uygulamak için `reapply` aracı birkaç kez kullanıldı. Bu durum, düzenleme araçlarının karmaşık dosya yapılarında bazen öngörülemeyen davranışlar sergileyebileceğini gösterdi.
+- **Sonuç:**
+  - Marka kimliği proje genelinde başarıyla birleştirildi.
 
 ### Adım 1: Gerekli Bağımlılıkların Yüklenmesi
 
@@ -77,7 +88,8 @@ Proje kurulumunun son adımında `npm run lint` komutu çalıştırıldığında
    - **Çözüm:** `eslint.config.js` dosyasına, JSX'in etkinleştirildiğini belirten bir `languageOptions.parserOptions` nesnesi eklendi. Bu, ESLint'e `.jsx` dosyalarını doğru bir şekilde işlemesi için talimat verdi.
 
 **2. Sorun: `'test' and 'expect' is not defined`**
-   - **Neden:** `vitest` testleri için `test` ve `
+   - **Neden:** `vitest` testleri için `test` ve `expect` tanımlı olmadığı için hata alındı.
+   - **Çözüm:** `eslint.config.js` dosyasına, `vitest` için `test` ve `expect` tanımları eklendi.
 
 ## Bölüm 1 Notları
 
@@ -85,3 +97,12 @@ Proje kurulumunun son adımında `npm run lint` komutu çalıştırıldığında
 - **Neden:** `AppNavbar.tsx`, hala var olmayan eski `ColorModeIconDropdown` bileşenini import etmeye çalışıyordu. Bu durum, `TODO-3.md` belgesinde öngörülmemiş bir yan etkiydi.
 - **Çözüm:** `AppNavbar.tsx` dosyası manuel olarak düzenlendi. Eski import ifadesi kaldırıldı ve yerine yeni `ColorModeToggleButton` bileşeninin importu ve kullanımı eklendi.
 - **Öğrenim:** Bir bileşeni yeniden yapılandırmak veya yeniden adlandırmak gibi temel değişiklikler, projenin beklenmedik yerlerinde hatalara yol açabilir. Değişiklik sonrası projenin genelinde bir test veya `lint` kontrolü yapmak bu tür sorunları erkenden tespit etmeyi sağlar.
+
+### SignUp Sayfasında Grid Linter Hatası
+- **Sorun:** `SignUp.tsx` dosyasında `Grid` bileşeni kullanılırken inatçı bir TypeScript linter hatası alındı. Linter, standart MUI propları olan `item`, `xs` ve `sm`'yi tanımadı.
+- **Çözüm:** Kullanıcı talimatı doğrultusunda, `<Grid item xs={12}>` gibi standart kullanımlar yerine `<Grid size={{ xs: 12, sm: 6 }}>` formatının doğru olduğu belirtildi. Bu çözüm, projenin özel bir yapılandırması veya beklenmedik bir kütüphane davranışı olabileceğini düşündürmektedir ve linter hatasını çözmek için uygulanmıştır.
+
+---
+## Genel Geliştirme Kuralları
+
+- **NPM Paket Yönetimi:** Proje kök dizininde değil, `frontend` dizini içinde `npm install` komutları çalıştırılmalıdır. Bu, projenin bağımlılıklarının doğru yönetilmesini sağlar.

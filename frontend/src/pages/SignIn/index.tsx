@@ -17,6 +17,8 @@ import { styled } from '@mui/material/styles';
 import ForgotPassword from './components/ForgotPassword';
 import AppTheme from '@/theme/shared-theme/AppTheme';
 import AppAppBar from '@/pages/MarketingPage/components/AppAppBar';
+import Grid from '@mui/material/Grid';
+import Diversity1Icon from '@mui/icons-material/Diversity1';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -95,7 +97,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
 
     if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
       setEmailError(true);
-      setEmailErrorMessage('Please enter a valid email address.');
+      setEmailErrorMessage('Lütfen geçerli bir e-posta adresi girin.');
       isValid = false;
     } else {
       setEmailError(false);
@@ -104,7 +106,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
 
     if (!password.value || password.value.length < 6) {
       setPasswordError(true);
-      setPasswordErrorMessage('Password must be at least 6 characters long.');
+      setPasswordErrorMessage('Şifre en az 6 karakter uzunluğunda olmalıdır.');
       isValid = false;
     } else {
       setPasswordError(false);
@@ -125,7 +127,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
             variant="h4"
             sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
           >
-            Sign in
+            Giriş yap
           </Typography>
           <Box
             component="form"
@@ -139,7 +141,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
             }}
           >
             <FormControl>
-              <FormLabel htmlFor="email">Email</FormLabel>
+              <FormLabel htmlFor="email">E-posta</FormLabel>
               <TextField
                 error={emailError}
                 helperText={emailErrorMessage}
@@ -156,7 +158,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               />
             </FormControl>
             <FormControl>
-              <FormLabel htmlFor="password">Password</FormLabel>
+              <FormLabel htmlFor="password">Şifre</FormLabel>
               <TextField
                 error={passwordError}
                 helperText={passwordErrorMessage}
@@ -174,7 +176,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
             </FormControl>
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
+              label="Beni Hatırla"
             />
             <ForgotPassword open={open} handleClose={handleClose} />
             <Button
@@ -183,29 +185,30 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               variant="contained"
               onClick={validateInputs}
             >
-              Sign in
+              Giriş yap
             </Button>
-            <Link
-              component="button"
-              type="button"
-              onClick={handleClickOpen}
-              variant="body2"
-              sx={{ alignSelf: 'center' }}
-            >
-              Forgot your password?
-            </Link>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+              <Link
+                href="#"
+                variant="body2"
+                onClick={(event) => {
+                  event.preventDefault();
+                  handleClickOpen();
+                }}
+              >
+                Şifreni mi unuttun?
+              </Link>
+              <Link
+                component={RouterLink}
+                to="/signup"
+                variant="body2"
+                sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
+              >
+                Hesabın yok mu? Gönüllü Ol
+                <Diversity1Icon fontSize="small" />
+              </Link>
+            </Box>
           </Box>
-          <Typography sx={{ textAlign: 'center' }}>
-            Don&apos;t have an account?{' '}
-            <Link
-              component={RouterLink}
-              to="/signup"
-              variant="body2"
-              sx={{ alignSelf: 'center' }}
-            >
-              Sign up
-            </Link>
-          </Typography>
         </Card>
       </SignInContainer>
     </AppTheme>

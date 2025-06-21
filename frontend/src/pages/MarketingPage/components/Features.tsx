@@ -14,27 +14,21 @@ import ViewQuiltRoundedIcon from '@mui/icons-material/ViewQuiltRounded';
 const items = [
   {
     icon: <ViewQuiltRoundedIcon />,
-    title: 'Dashboard',
+    title: 'Gösterge Paneli',
     description:
-      'This item could provide a snapshot of the most important metrics or data points related to the product.',
-    imageLight: `url("https://mui.com/static/images/templates/templates-images/dash-light.png")`,
-    imageDark: `url("https://mui.com/static/images/templates/templates-images/dash-dark.png")`,
+      'Bu bölüm, ürünle ilgili en önemli metriklerin veya veri noktalarının bir anlık görüntüsünü sağlayabilir.',
   },
   {
     icon: <EdgesensorHighRoundedIcon />,
-    title: 'Mobile integration',
+    title: 'Mobil Entegrasyon',
     description:
-      'This item could provide information about the mobile app version of the product.',
-    imageLight: `url("https://mui.com/static/images/templates/templates-images/mobile-light.png")`,
-    imageDark: `url("https://mui.com/static/images/templates/templates-images/mobile-dark.png")`,
+      'Bu bölüm, ürünün mobil uygulama versiyonu hakkında bilgi sağlayabilir.',
   },
   {
     icon: <DevicesRoundedIcon />,
-    title: 'Available on all platforms',
+    title: 'Tüm Platformlarda Mevcut',
     description:
-      'This item could let users know the product is available on all platforms, such as web, mobile, and desktop.',
-    imageLight: `url("https://mui.com/static/images/templates/templates-images/devices-light.png")`,
-    imageDark: `url("https://mui.com/static/images/templates/templates-images/devices-dark.png")`,
+      'Bu bölüm, kullanıcılara ürünün web, mobil ve masaüstü gibi tüm platformlarda mevcut olduğunu bildirebilir.',
   },
 ];
 
@@ -98,25 +92,19 @@ export function MobileLayout({
       </Box>
       <Card variant="outlined">
         <Box
-          sx={(theme) => ({
-            mb: 2,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
             minHeight: 280,
-            backgroundImage: 'var(--items-imageLight)',
-            ...theme.applyStyles('dark', {
-              backgroundImage: 'var(--items-imageDark)',
-            }),
+            mb: 2,
+            color: 'primary.main',
+          }}
+        >
+          {React.cloneElement(selectedFeature.icon, {
+            sx: { fontSize: '4rem' },
           })}
-          style={
-            items[selectedItemIndex]
-              ? ({
-                  '--items-imageLight': items[selectedItemIndex].imageLight,
-                  '--items-imageDark': items[selectedItemIndex].imageDark,
-                } as any)
-              : {}
-          }
-        />
+        </Box>
         <Box sx={{ px: 2, pb: 2 }}>
           <Typography
             gutterBottom
@@ -151,15 +139,15 @@ export default function Features() {
           gutterBottom
           sx={{ color: 'text.primary' }}
         >
-          Product features
+          Ürün Özellikleri
         </Typography>
         <Typography
           variant="body1"
           sx={{ color: 'text.secondary', mb: { xs: 2, sm: 4 } }}
         >
-          Provide a brief overview of the key features of the product. For example,
-          you could list the number of features, their types or benefits, and
-          add-ons.
+          Ürünün temel özelliklerine kısa bir genel bakış sunun. Örneğin,
+          özelliklerin sayısını, türlerini veya faydalarını listeleyebilir ve
+          eklentiler ekleyebilirsiniz.
         </Typography>
       </Box>
       <Box
@@ -232,7 +220,7 @@ export default function Features() {
           sx={{
             display: { xs: 'none', sm: 'flex' },
             width: { xs: '100%', md: '70%' },
-            height: 'var(--items-image-height)',
+            minHeight: { sm: 400, md: 500 },
           }}
         >
           <Card
@@ -245,25 +233,18 @@ export default function Features() {
             }}
           >
             <Box
-              sx={(theme) => ({
+              sx={{
                 m: 'auto',
-                width: 420,
-                height: 500,
-                backgroundSize: 'contain',
-                backgroundImage: 'var(--items-imageLight)',
-                ...theme.applyStyles('dark', {
-                  backgroundImage: 'var(--items-imageDark)',
-                }),
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'primary.main',
+              }}
+            >
+              {React.cloneElement(selectedFeature.icon, {
+                sx: { fontSize: '6rem' },
               })}
-              style={
-                items[selectedItemIndex]
-                  ? ({
-                      '--items-imageLight': items[selectedItemIndex].imageLight,
-                      '--items-imageDark': items[selectedItemIndex].imageDark,
-                    } as any)
-                  : {}
-              }
-            />
+            </Box>
           </Card>
         </Box>
       </Box>

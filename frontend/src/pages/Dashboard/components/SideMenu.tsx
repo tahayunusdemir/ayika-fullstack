@@ -3,13 +3,13 @@ import { styled } from '@mui/material/styles';
 import Avatar from '@mui/material/Avatar';
 import MuiDrawer, { drawerClasses } from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
 import MenuContent from './MenuContent';
 import CardAlert from './CardAlert';
 import OptionsMenu from './OptionsMenu';
-import SitemarkIcon from '@/pages/MarketingPage/components/SitemarkIcon';
+import AyikaIcon from '@/pages/MarketingPage/components/AyikaIcon';
 
 const drawerWidth = 240;
 
@@ -17,7 +17,6 @@ const Drawer = styled(MuiDrawer)({
   width: drawerWidth,
   flexShrink: 0,
   boxSizing: 'border-box',
-  mt: 10,
   [`& .${drawerClasses.paper}`]: {
     width: drawerWidth,
     boxSizing: 'border-box',
@@ -38,23 +37,14 @@ export default function SideMenu() {
       <Box
         sx={{
           display: 'flex',
-          mt: 'calc(var(--template-frame-height, 0px) + 4px)',
-          p: 1.5,
-        }}
-      >
-        <Box sx={{ p: 1 }}>
-          <SitemarkIcon />
-        </Box>
-      </Box>
-      <Divider />
-      <Box
-        sx={{
-          overflow: 'auto',
-          height: '100%',
-          display: 'flex',
           flexDirection: 'column',
+          height: '100%',
         }}
       >
+        <Box sx={{ p: 2, textAlign: 'center' }}>
+          <AyikaIcon />
+        </Box>
+        <Divider />
         <MenuContent />
         <CardAlert />
       </Box>

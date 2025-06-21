@@ -4,12 +4,11 @@ import Divider from '@mui/material/Divider';
 import AppTheme from '@/theme/shared-theme/AppTheme';
 import AppAppBar from './components/AppAppBar';
 import Hero from './components/Hero';
-import LogoCollection from './components/LogoCollection';
 import Highlights from './components/Highlights';
-import Pricing from './components/Pricing';
 import Features from './components/Features';
-import Testimonials from './components/Testimonials';
 import FAQ from './components/FAQ';
+import Team from './components/Team';
+import Supporters from './components/Supporters';
 import Footer from './components/Footer';
 
 export default function MarketingPage(props: { disableCustomTheme?: boolean }) {
@@ -20,16 +19,15 @@ export default function MarketingPage(props: { disableCustomTheme?: boolean }) {
       <AppAppBar />
       <Hero />
       <div>
-        <LogoCollection />
         <Features />
-        <Divider />
-        <Testimonials />
         <Divider />
         <Highlights />
         <Divider />
-        <Pricing />
+        <Team />
         <Divider />
         <FAQ />
+        <Divider />
+        <Supporters />
         <Divider />
         <Footer />
       </div>

@@ -42,7 +42,7 @@ export default function FAQ() {
           textAlign: { sm: 'left', md: 'center' },
         }}
       >
-        Frequently asked questions
+        Sıkça sorulan sorular
       </Typography>
       <Box sx={{ width: '100%' }}>
         <Accordion
@@ -55,7 +55,7 @@ export default function FAQ() {
             id="panel1d-header"
           >
             <Typography component="span" variant="subtitle2">
-              How do I contact customer support if I have a question or issue?
+              Bir sorum veya sorunum olursa müşteri desteği ile nasıl iletişime geçebilirim?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -64,10 +64,9 @@ export default function FAQ() {
               gutterBottom
               sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
-              You can reach our customer support team by emailing&nbsp;
-              <Link href="mailto:support@email.com">support@email.com</Link>
-              &nbsp;or calling our toll-free number. We&apos;re here to assist you
-              promptly.
+              Müşteri destek ekibimize&nbsp;
+              <Link href="mailto:destek@sirket.com">destek@sirket.com</Link>
+              &nbsp;adresine e-posta göndererek veya ücretsiz hattımızı arayarak ulaşabilirsiniz. Size hızlı bir şekilde yardımcı olmak için buradayız.
             </Typography>
           </AccordionDetails>
         </Accordion>
@@ -81,7 +80,7 @@ export default function FAQ() {
             id="panel2d-header"
           >
             <Typography component="span" variant="subtitle2">
-              Can I return the product if it doesn&apos;t meet my expectations?
+              Ürün beklentilerimi karşılamazsa iade edebilir miyim?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -90,9 +89,7 @@ export default function FAQ() {
               gutterBottom
               sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
-              Absolutely! We offer a hassle-free return policy. If you&apos;re not
-              completely satisfied, you can return the product within [number of
-              days] days for a full refund or exchange.
+              Kesinlikle! Sorunsuz bir iade politikası sunuyoruz. Tamamen memnun kalmazsanız, ürünü [gün sayısı] gün içinde tam bir geri ödeme veya değişim için iade edebilirsiniz.
             </Typography>
           </AccordionDetails>
         </Accordion>
@@ -106,7 +103,7 @@ export default function FAQ() {
             id="panel3d-header"
           >
             <Typography component="span" variant="subtitle2">
-              What makes your product stand out from others in the market?
+              Ürününüzü piyasadaki diğerlerinden ayıran nedir?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -115,9 +112,7 @@ export default function FAQ() {
               gutterBottom
               sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
-              Our product distinguishes itself through its adaptability, durability,
-              and innovative features. We prioritize user satisfaction and
-              continually strive to exceed expectations in every aspect.
+              Ürünümüz, uyarlanabilirliği, dayanıklılığı ve yenilikçi özellikleriyle kendini ayırır. Kullanıcı memnuniyetini önceliklendiriyor ve her yönden beklentileri aşmak için sürekli çaba gösteriyoruz.
             </Typography>
           </AccordionDetails>
         </Accordion>
@@ -131,7 +126,7 @@ export default function FAQ() {
             id="panel4d-header"
           >
             <Typography component="span" variant="subtitle2">
-              Is there a warranty on the product, and what does it cover?
+              Ürünün bir garantisi var mı ve neleri kapsıyor?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -140,10 +135,7 @@ export default function FAQ() {
               gutterBottom
               sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
-              Yes, our product comes with a [length of warranty] warranty. It covers
-              defects in materials and workmanship. If you encounter any issues
-              covered by the warranty, please contact our customer support for
-              assistance.
+              Evet, ürünümüz [garanti süresi] garantisi ile birlikte gelir. Malzeme ve işçilik kusurlarını kapsar. Garanti kapsamındaki herhangi bir sorunla karşılaşırsanız, yardım için lütfen müşteri desteğimizle iletişime geçin.
             </Typography>
           </AccordionDetails>
         </Accordion>
