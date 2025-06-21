@@ -1,0 +1,29 @@
+# ===================================================================
+# Global Ignores
+# ===================================================================
+
+# IDE and Editor Files
+# Docs: https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+.idea/
+.vscode/*
+# Don't ignore extensions.json, so it can be shared with team
+!.vscode/extensions.json
+*.swp
+*.swo
+*.sln
+*.suo
+*.ntvs*
+*.njsproj
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+._*
+
+# Environment variables
+# Can be inherited by all sub-projects.
+.env*
+!/.env.example
+
+# General log files
+*.log

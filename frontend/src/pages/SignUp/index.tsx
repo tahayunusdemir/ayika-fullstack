@@ -80,22 +80,12 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       .then((data) => setCities(data));
   }, []);
 
-  const [emailError, setEmailError] = React.useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-  const [nameError, setNameError] = React.useState(false);
-  const [nameErrorMessage, setNameErrorMessage] = React.useState('');
-  const [tcKimlikNoError, setTcKimlikNoError] = React.useState(false);
-  const [tcKimlikNoErrorMessage, setTcKimlikNoErrorMessage] = React.useState('');
-  const [phoneError, setPhoneError] = React.useState(false);
-  const [phoneErrorMessage, setPhoneErrorMessage] = React.useState('');
   const [isKvkkOpen, setIsKvkkOpen] = React.useState(false);
   const [isGonullulukOpen, setIsGonullulukOpen] = React.useState(false);
   const [kvkkChecked, setKvkkChecked] = React.useState(false);
   const [gonullulukChecked, setGonullulukChecked] = React.useState(false);
-  const [termsError, setTermsError] = React.useState(false);
-  const [errors, setErrors] = React.useState({});
+  
+  const [errors, setErrors] = React.useState<{ [key: string]: string | string[] }>({});
   const [loading, setLoading] = React.useState(false);
 
   const handleKvkkOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -116,107 +106,18 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
     setIsGonullulukOpen(false);
   };
 
-  const validateInputs = () => {
-    const email = document.getElementById('email') as HTMLInputElement;
-    const password = document.getElementById('password') as HTMLInputElement;
-    const name = document.getElementById('firstName') as HTMLInputElement;
-    const tcKimlikNo = document.getElementById('tcKimlikNo') as HTMLInputElement;
-    const phone = document.getElementById('phone') as HTMLInputElement;
-
-    let isValid = true;
-
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-      setEmailError(true);
-      setEmailErrorMessage('Lütfen geçerli bir e-posta adresi girin.');
-      isValid = false;
-    } else {
-      setEmailError(false);
-      setEmailErrorMessage('');
-    }
-
-    if (!password.value || password.value.length < 6) {
-      setPasswordError(true);
-      setPasswordErrorMessage('Şifre en az 6 karakter uzunluğunda olmalıdır.');
-      isValid = false;
-    } else {
-      setPasswordError(false);
-      setPasswordErrorMessage('');
-    }
-
-    if (!name.value || name.value.length < 1) {
-      setNameError(true);
-      setNameErrorMessage('Ad alanı zorunludur.');
-      isValid = false;
-    } else {
-      setNameError(false);
-      setNameErrorMessage('');
-    }
-
-    const tcRegex = /^[0-9]{11}$/;
-    if (!tcKimlikNo.value || !tcRegex.test(tcKimlikNo.value)) {
-      setTcKimlikNoError(true);
-      setTcKimlikNoErrorMessage('T.C. Kimlik Numarası 11 rakamdan oluşmalıdır.');
-      isValid = false;
-    } else {
-      setTcKimlikNoError(false);
-      setTcKimlikNoErrorMessage('');
-    }
-
-    const phoneRegex = /^[0-9]{10}$/;
-    if (!phone.value || !phoneRegex.test(phone.value.replace(/\s/g, ''))) {
-      setPhoneError(true);
-      setPhoneErrorMessage('Telefon numarası 10 rakamdan oluşmalıdır (örn: 5551234567).');
-      isValid = false;
-    } else {
-      setPhoneError(false);
-      setPhoneErrorMessage('');
-    }
-
-    if (!kvkkChecked || !gonullulukChecked) {
-      setTermsError(true);
-      isValid = false;
-    } else {
-      setTermsError(false);
-    }
-
-    return { isValid, errors: {} };
-  };
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setErrors({});
     setLoading(true);
-  
-    const data = new FormData(event.currentTarget);
-    const password = data.get('password');
-    const confirmPassword = data.get('passwordConfirm');
-    const kvkkChecked = data.get('kvkk') === 'on';
-    const gonullulukChecked = data.get('gonulluluk') === 'on';
-  
-    let hasError = false;
-    const newErrors: { [key: string]: string } = {};
-  
-    if (password !== confirmPassword) {
-      newErrors.passwordConfirm = 'Şifreler eşleşmiyor.';
-      hasError = true;
-    }
-  
+
     if (!kvkkChecked || !gonullulukChecked) {
-      newErrors.terms = 'Lütfen gerekli tüm onayları işaretleyin.';
-      hasError = true;
-    }
-  
-    const validation = validateInputs();
-    if (!validation.isValid) {
-      setErrors((prev) => ({ ...prev, ...validation.errors }));
-      hasError = true;
-    }
-  
-    if (hasError) {
-      setErrors((prev) => ({ ...prev, ...newErrors }));
+      setErrors({ terms: 'Lütfen gerekli tüm onayları işaretleyin.' });
       setLoading(false);
       return;
     }
+  
+    const data = new FormData(event.currentTarget);
   
     const payload = {
       first_name: data.get('firstName'),
@@ -225,26 +126,26 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       phone_number: data.get('phone'),
       city: data.get('city'),
       email: data.get('email'),
-      password: password,
-      password_confirm: confirmPassword,
+      password: data.get('password'),
+      password_confirm: data.get('passwordConfirm'),
     };
   
     try {
-      // apiClient yerine doğrudan axios kullanılıyor çünkü henüz tam entegre edilmedi
-      const response = await axios.post('http://127.0.0.1:8000/api/auth/register/', payload);
-      console.log('Kayıt başarılı:', response.data);
-      // Kayıt sonrası giriş sayfasına yönlendir ve bir başarı mesajı göster
+      await axios.post('http://127.0.0.1:8000/api/auth/register/', payload);
       navigate('/signin', { state: { message: 'Kaydınız başarıyla oluşturuldu. Lütfen giriş yapın.' } });
     } catch (error: any) {
-      console.error('Kayıt başarısız:', error.response?.data);
-      // Backend'den gelen hataları state'e alıp formda göster
       if (error.response?.data && typeof error.response.data === 'object') {
-        setErrors(error.response.data);
+        const backendErrors = error.response.data;
+        const newErrors: { [key: string]: string } = {};
+        for (const key in backendErrors) {
+            newErrors[key] = Array.isArray(backendErrors[key]) ? backendErrors[key][0] : backendErrors[key];
+        }
+        setErrors(newErrors);
       } else {
-        setErrors({ form: 'Bilinmeyen bir hata oluştu.'})
+        setErrors({ form: 'Bilinmeyen bir hata oluştu.'});
       }
     } finally {
-      setLoading(false); // Yüklenme durumunu bitir
+      setLoading(false);
     }
   };
 
@@ -277,9 +178,8 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                     fullWidth
                     id="firstName"
                     placeholder="Adınız"
-                    error={nameError}
-                    helperText={nameErrorMessage}
-                    color={nameError ? 'error' : 'primary'}
+                    error={!!errors.first_name}
+                    helperText={errors.first_name}
                   />
                 </FormControl>
               </Grid>
@@ -293,6 +193,8 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                     fullWidth
                     id="lastName"
                     placeholder="Soyadınız"
+                    error={!!errors.last_name}
+                    helperText={errors.last_name}
                   />
                 </FormControl>
               </Grid>
@@ -307,9 +209,8 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                     id="tcKimlikNo"
                     name="tcKimlikNo"
                     placeholder="T.C. Kimlik Numaranız"
-                    error={tcKimlikNoError}
-                    helperText={tcKimlikNoErrorMessage}
-                    color={tcKimlikNoError ? 'error' : 'primary'}
+                    error={!!errors.tc_kimlik_no}
+                    helperText={errors.tc_kimlik_no}
                   />
                 </FormControl>
               </Grid>
@@ -323,9 +224,8 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                     name="phone"
                     autoComplete="tel"
                     placeholder="5551234567"
-                    error={phoneError}
-                    helperText={phoneErrorMessage}
-                    color={phoneError ? 'error' : 'primary'}
+                    error={!!errors.phone_number}
+                    helperText={errors.phone_number}
                   />
                 </FormControl>
               </Grid>
@@ -356,9 +256,8 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                 name="email"
                 autoComplete="email"
                 variant="outlined"
-                error={emailError}
-                helperText={emailErrorMessage}
-                color={passwordError ? 'error' : 'primary'}
+                error={!!errors.email}
+                helperText={errors.email}
               />
             </FormControl>
             <FormControl>
@@ -372,9 +271,8 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                 id="password"
                 autoComplete="new-password"
                 variant="outlined"
-                error={passwordError}
-                helperText={passwordErrorMessage}
-                color={passwordError ? 'error' : 'primary'}
+                error={!!errors.password}
+                helperText={errors.password}
               />
             </FormControl>
             <FormControl>
@@ -388,11 +286,13 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                 id="passwordConfirm"
                 autoComplete="new-password"
                 variant="outlined"
+                error={!!errors.password_confirm}
+                helperText={errors.password_confirm}
               />
             </FormControl>
             <FormControl
               required
-              error={termsError}
+              error={!!errors.terms}
               component="fieldset"
               variant="standard"
             >
@@ -444,9 +344,9 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                   }
                 />
               </FormGroup>
-              {termsError && (
+              {errors.terms && (
                 <FormHelperText>
-                  Devam etmek için her iki kutucuğu da işaretlemelisiniz.
+                  {errors.terms}
                 </FormHelperText>
               )}
             </FormControl>

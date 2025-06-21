@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useMemo, useEffect, ReactNode } from 'react';
-import apiClient from '@/api/axios'; // apiClient'i import et
+import axios from 'axios';
 
 interface AuthContextType {
     user: any;
@@ -12,32 +12,51 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // Sayfa yüklendiğinde token kontrolü için
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Uygulama yüklendiğinde token varsa kullanıcıyı çekmeyi dene
-    const fetchUser = async () => {
-      const token = localStorage.getItem('accessToken');
-      if (token) {
-        try {
-          const response = await apiClient.get('/auth/me/');
-          setUser(response.data);
-        } catch (error) {
-          console.error("Token'la kullanıcı çekilemedi, muhtemelen süresi dolmuş.", error);
-          localStorage.removeItem('accessToken');
+    const initializeAuth = async () => {
+      try {
+        const storedUser = localStorage.getItem('user');
+        const accessToken = localStorage.getItem('accessToken');
+
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+        } else if (accessToken) {
+          // Eğer sadece token var ama user bilgisi yoksa, kullanıcıyı çekmeyi dene
+          // Bu durum, sayfa yenilendiğinde veya tarayıcı kapatılıp açıldığında olabilir
+          axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+          const response = await axios.get('http://127.0.0.1:8000/api/auth/me/');
+          const userData = response.data;
+          setUser(userData);
+          localStorage.setItem('user', JSON.stringify(userData));
         }
+      } catch (error) {
+        console.error("Oturum başlatılamadı veya token geçersiz.", error);
+        // Hata durumunda token ve kullanıcı bilgilerini temizle
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('user');
+        setUser(null);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
-    fetchUser();
+
+    initializeAuth();
   }, []);
 
-  const login = (userData: any) => setUser(userData);
+  const login = (userData: any) => {
+    setUser(userData);
+    localStorage.setItem('user', JSON.stringify(userData));
+  };
+
   const logout = () => {
     setUser(null);
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
-    // İsteğe bağlı: Kullanıcıyı login sayfasına yönlendir
+    localStorage.removeItem('user');
+    delete axios.defaults.headers.common['Authorization'];
   };
 
   const value = useMemo(
@@ -45,7 +64,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     [user, loading]
   );
 
-  // loading false olana kadar alt bileşenleri render etme
   return (
     <AuthContext.Provider value={value}>
       {!loading && children}

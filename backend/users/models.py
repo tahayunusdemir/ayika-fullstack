@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from .managers import CustomUserManager
 
 class User(AbstractUser):
     # Varsayılan 'username' alanını T.C. Kimlik No ile değiştireceğiz.
@@ -9,6 +10,9 @@ class User(AbstractUser):
     # AbstractUser'daki username'i null yapıp unique'i kaldırıyoruz, çünkü tc_kimlik_no kullanacağız
     username = models.CharField(max_length=150, unique=False, blank=True, null=True)
 
+    # AbstractUser'dan gelen email alanını unique yapmak için override ediyoruz.
+    email = models.EmailField('E-posta adresi', unique=True)
+
     # Yeni alanlar
     tc_kimlik_no = models.CharField(max_length=11, unique=True, primary_key=True, verbose_name="T.C. Kimlik Numarası")
     phone_number = models.CharField(max_length=15, blank=True, verbose_name="Telefon Numarası")
@@ -16,6 +20,8 @@ class User(AbstractUser):
 
     # Kayıt olurken 'email' ve 'tc_kimlik_no' alanlarının zorunlu olmasını sağlıyoruz
     REQUIRED_FIELDS = ['email', 'first_name', 'last_name']
+
+    objects = CustomUserManager()
 
     def __str__(self):
         return self.get_full_name() or self.tc_kimlik_no

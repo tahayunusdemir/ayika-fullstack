@@ -91,7 +91,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
+    event.preventDefault();
     setLoading(true);
     setErrors({
       tcKimlikNo: '',
@@ -109,30 +109,32 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     const password = data.get('password');
 
     try {
-      // 1. Token al
-      const tokenResponse = await axios.post('http://127.0.0.1:8000/api/auth/token/', {
+      const response = await axios.post('http://127.0.0.1:8000/api/auth/token/', {
         tc_kimlik_no: tcKimlikNo,
         password,
       });
       
-      localStorage.setItem('accessToken', tokenResponse.data.access);
-      localStorage.setItem('refreshToken', tokenResponse.data.refresh);
-      
-      axios.defaults.headers.common['Authorization'] = `Bearer ${tokenResponse.data.access}`;
+      const { access, refresh, user } = response.data;
 
-      const userResponse = await axios.get('http://127.0.0.1:8000/api/auth/me/');
+      localStorage.setItem('accessToken', access);
+      localStorage.setItem('refreshToken', refresh);
+      localStorage.setItem('user', JSON.stringify(user));
       
-      login(userResponse.data);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${access}`;
+      
+      login(user);
 
       navigate('/dashboard');
 
     } catch (error: any) {
       console.error('Giriş başarısız:', error.response?.data);
+      let errorMessage = 'Giriş sırasında bir hata oluştu. Lütfen tekrar deneyin.';
       if (error.response?.data?.detail) {
-        setErrors((prev) => ({...prev, form: error.response.data.detail}));
-      } else {
-        setErrors((prev) => ({...prev, form: 'Giriş sırasında bir hata oluştu.'}));
+        errorMessage = error.response.data.detail;
+      } else if (typeof error.response?.data === 'string') {
+        errorMessage = error.response.data;
       }
+      setErrors((prev) => ({...prev, form: errorMessage}));
     } finally {
       setLoading(false);
     }
@@ -180,6 +182,9 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
           </Typography>
           {location.state?.message && (
             <Alert severity="success">{location.state.message}</Alert>
+          )}
+          {errors.form && (
+            <Alert severity="error">{errors.form}</Alert>
           )}
           <Box
             component="form"

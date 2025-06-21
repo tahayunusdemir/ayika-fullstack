@@ -1,0 +1,21 @@
+# ===================================================================
+# Backend (Python / Django)
+# ===================================================================
+
+# Python virtual environment
+venv/
+.venv/
+env/
+
+# Python cache & artifacts
+__pycache__/
+*.py[cod]
+
+# Database files
+*.sqlite3
+*.db
+
+# Django specific
+staticfiles/
+mediafiles/
+local_settings.py
