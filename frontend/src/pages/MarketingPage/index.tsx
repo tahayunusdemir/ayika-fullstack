@@ -10,6 +10,7 @@ import FAQ from './components/FAQ';
 import Team from './components/Team';
 import Supporters from './components/Supporters';
 import Footer from './components/Footer';
+import Box from '@mui/material/Box';
 
 export default function MarketingPage(props: { disableCustomTheme?: boolean }) {
   return (
@@ -18,19 +19,35 @@ export default function MarketingPage(props: { disableCustomTheme?: boolean }) {
 
       <AppAppBar />
       <Hero />
-      <div>
-        <Features />
+      <Box
+        component="div"
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        <Box id="features" sx={{ scrollMarginTop: '64px' }}>
+          <Features />
+        </Box>
         <Divider />
-        <Highlights />
+        <Box id="highlights" sx={{ scrollMarginTop: '64px' }}>
+          <Highlights />
+        </Box>
         <Divider />
-        <Team />
+        <Box id="team" sx={{ scrollMarginTop: '64px' }}>
+          <Team />
+        </Box>
         <Divider />
-        <FAQ />
+        <Box id="faq" sx={{ scrollMarginTop: '64px' }}>
+          <FAQ />
+        </Box>
         <Divider />
-        <Supporters />
+        <Box id="supporters" sx={{ scrollMarginTop: '64px' }}>
+          <Supporters />
+        </Box>
         <Divider />
         <Footer />
-      </div>
+      </Box>
     </AppTheme>
   );
 }

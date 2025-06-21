@@ -63,8 +63,8 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function SignIn(props: { disableCustomTheme?: boolean }) {
-  const [emailError, setEmailError] = React.useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
+  const [tcKimlikNoError, setTcKimlikNoError] = React.useState(false);
+  const [tcKimlikNoErrorMessage, setTcKimlikNoErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
@@ -78,30 +78,30 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (emailError || passwordError) {
+    if (tcKimlikNoError || passwordError) {
       event.preventDefault();
       return;
     }
     const data = new FormData(event.currentTarget);
     console.log({
-      email: data.get('email'),
+      tcKimlikNo: data.get('tcKimlikNo'),
       password: data.get('password'),
     });
   };
 
   const validateInputs = () => {
-    const email = document.getElementById('email') as HTMLInputElement;
+    const tcKimlikNo = document.getElementById('tcKimlikNo') as HTMLInputElement;
     const password = document.getElementById('password') as HTMLInputElement;
 
     let isValid = true;
 
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-      setEmailError(true);
-      setEmailErrorMessage('Lütfen geçerli bir e-posta adresi girin.');
+    if (!tcKimlikNo.value || !/^\d{11}$/.test(tcKimlikNo.value)) {
+      setTcKimlikNoError(true);
+      setTcKimlikNoErrorMessage('Lütfen 11 haneli T.C. Kimlik Numaranızı girin.');
       isValid = false;
     } else {
-      setEmailError(false);
-      setEmailErrorMessage('');
+      setTcKimlikNoError(false);
+      setTcKimlikNoErrorMessage('');
     }
 
     if (!password.value || password.value.length < 6) {
@@ -141,20 +141,23 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
             }}
           >
             <FormControl>
-              <FormLabel htmlFor="email">E-posta</FormLabel>
+              <FormLabel htmlFor="tcKimlikNo">T.C. Kimlik Numarası</FormLabel>
               <TextField
-                error={emailError}
-                helperText={emailErrorMessage}
-                id="email"
-                type="email"
-                name="email"
-                placeholder="your@email.com"
-                autoComplete="email"
+                error={tcKimlikNoError}
+                helperText={tcKimlikNoErrorMessage}
+                id="tcKimlikNo"
+                type="text"
+                name="tcKimlikNo"
+                placeholder="T.C. Kimlik Numaranız"
+                autoComplete="username"
                 autoFocus
                 required
                 fullWidth
                 variant="outlined"
-                color={emailError ? 'error' : 'primary'}
+                color={tcKimlikNoError ? 'error' : 'primary'}
+                inputProps={{
+                  maxLength: 11,
+                }}
               />
             </FormControl>
             <FormControl>

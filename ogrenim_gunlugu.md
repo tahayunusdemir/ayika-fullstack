@@ -1,12 +1,37 @@
 # Öğrenim Günlüğü
 
-Bu dosya, Ayika projesinin geliştirme sürecinde karşılaşılan zorlukları, alınan kararları ve öğrenilen dersleri belgelemek amacıyla oluşturulmuştur.
+Bu dosya, Ayika Fullstack projesinin geliştirme süreci boyunca karşılaşılan sorunları, alınan kararları ve öğrenilenleri belgelemek için oluşturulmuştur.
 
 Bu günlük, `TODO-2.md` görevleri sırasında karşılaşılan sorunları, alınan kararları ve önemli notları içerir.
 
 Bu günlük, `TODO-1.md` dosyasındaki adımlar takip edilerek yapılan proje kurulumu sırasında alınan notları içerir.
 
 Bu günlük, `TODO-3.md` görevleri uygulanırken karşılaşılan sorunları, alınan kararları ve öğrenilen dersleri belgelemek için oluşturulmuştur.
+
+Bu günlük, `TODO-4.md` görevleri uygulanırken karşılaşılan sorunları, alınan kararları ve öğrenilen dersleri belgelemek için oluşturulmuştur.
+
+# Geliştirme Notları (TODO-5)
+
+Bu günlük, `TODO-5.md` görevleri sırasında alınan kararları ve yapılan önemli geliştirmeleri içerir.
+
+## Bölüm 1: Form Geliştirmeleri
+
+-   **Yapılan İşlemler:**
+    -   `SignIn` ve `SignUp` sayfalarına yönelik tüm arayüz ve işlevsellik geliştirmeleri tamamlandı.
+    -   `SignIn` sayfasında e-posta ile giriş, T.C. Kimlik Numarası ile değiştirildi.
+    -   `SignUp` formuna T.C. Kimlik Numarası, Telefon Numarası, Şehir seçimi ve Şifre Doğrulama alanları eklendi.
+    -   Tüm formlara, kullanıcı girdilerini göndermeden önce doğrulayan istemci tarafı (client-side) validasyon mekanizmaları eklendi.
+-   **Karşılaşılan Zorluklar ve Alınan Kararlar:**
+    -   **Karar (İyileştirme):** `TODO-5.md` belgesi, `SignUp` sayfasındaki KVKK ve Gönüllülük Esasları onay kutularının basit bir metin ile oluşturulmasını öneriyordu. Ancak kullanıcı deneyimini iyileştirmek ve yasal metinlerin tamamının okunabilir olmasını sağlamak amacıyla, bu metinlerin bir modal (dialog) penceresi içinde açılmasını sağlayan bir yapı tercih edildi. Bu yaklaşım, arayüzü daha temiz tutarken kullanıcının metinlere kolayca erişmesine olanak tanır. Bu nedenle `FormControlLabel` içindeki `label`, bir `<Link>` bileşeni içerecek şekilde güncellendi.
+-   **Sonuç:**
+    -   Formlar, `TODO-5.md`'de belirtilen gereksinimlere ve ek iyileştirmelere uygun olarak başarıyla güncellendi.
+
+## Bölüm 2: Navigasyon İyileştirmeleri
+
+-   **Yapılan İşlemler:**
+    -   `MarketingPage` sayfasında, navigasyon menüsünden bir bölüme tıklandığında sabit `AppAppBar`'ın bölüm başlığını gizlemesi sorunu giderildi.
+-   **Alınan Kararlar:**
+    -   `TODO-5.md`'de önerildiği gibi, ilgili bölümlere (`<Box>`) `scrollMarginTop` CSS özelliği eklenerek sorun temiz ve etkili bir şekilde çözüldü. Bu, JavaScript tabanlı çözümlere göre daha performanslı ve standartlara uygun bir yöntemdir.
 
 ## Bölüm 1: Marka Adını Güncelleme
 
