@@ -131,3 +131,17 @@ Proje kurulumunun son adımında `npm run lint` komutu çalıştırıldığında
 ## Genel Geliştirme Kuralları
 
 - **NPM Paket Yönetimi:** Proje kök dizininde değil, `frontend` dizini içinde `npm install` komutları çalıştırılmalıdır. Bu, projenin bağımlılıklarının doğru yönetilmesini sağlar.
+
+# Geliştirme Notları (TODO-6)
+
+Bu günlük, `TODO-6.md` görevleri uygulanırken karşılaşılan sorunları, alınan kararları ve öğrenilen dersleri belgelemek için oluşturulmuştur.
+
+Son olarak, kullanıcının talebi üzerine `TEST.md` dosyası, `docker-compose` komutlarını kullanarak projenin nasıl başlatılacağını ve test edileceğini açıklayan yeni ve daha basit talimatlarla tamamen güncellendi.
+
+**Docker "Race Condition" Sorunu ve Çözümü**
+`docker-compose up` komutuyla projeyi ilk kez başlattığımızda, `web` (Django) servisinin `db` (PostgreSQL) servisi tam olarak hazır olmadan önce başlamaya çalışması nedeniyle bir "yarış durumu" (race condition) ortaya çıktı. Bu, `web` servisinin veritabanına bağlanmaya çalışırken `Connection refused` hatası almasına neden oldu.
+
+Sorunu çözmek ve `docker-compose` yapılandırmasını daha sağlam hale getirmek için `docker-compose.yml` dosyasında şu iyileştirmeler yapıldı:
+1.  **Healthcheck (Sağlık Kontrolü):** `db` servisine, veritabanının bağlantıları kabul etmeye hazır olup olmadığını düzenli olarak kontrol eden bir `healthcheck` mekanizması eklendi.
+2.  **Gelişmiş Servis Bağımlılığı:** `web` servisinin `db` servisine olan `depends_on` koşulu, sadece `db` servisinin başlamasını değil, `service_healthy` (servis sağlıklı) durumuna geçmesini bekleyecek şekilde güncellendi.
+Bu sayede `web` servisi, veritabanı tamamen hazır olana kadar bekleyerek başlangıçtaki bağlantı hatalarını ortadan kaldırıyor.

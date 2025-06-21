@@ -1,17 +1,56 @@
-import { createContext, useState, useContext, useMemo } from 'react';
+import { createContext, useState, useContext, useMemo, useEffect, ReactNode } from 'react';
+import apiClient from '@/api/axios'; // apiClient'i import et
 
-const AuthContext = createContext(null);
+interface AuthContextType {
+    user: any;
+    login: (userData: any) => void;
+    logout: () => void;
+    loading: boolean;
+}
 
-export const AuthProvider = ({ children }) => {
+const AuthContext = createContext<AuthContextType | null>(null);
+
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // Sayfa yüklendiğinde token kontrolü için
 
-  const login = (userData) => setUser(userData);
-  const logout = () => setUser(null);
+  useEffect(() => {
+    // Uygulama yüklendiğinde token varsa kullanıcıyı çekmeyi dene
+    const fetchUser = async () => {
+      const token = localStorage.getItem('accessToken');
+      if (token) {
+        try {
+          const response = await apiClient.get('/auth/me/');
+          setUser(response.data);
+        } catch (error) {
+          console.error("Token'la kullanıcı çekilemedi, muhtemelen süresi dolmuş.", error);
+          localStorage.removeItem('accessToken');
+        }
+      }
+      setLoading(false);
+    };
+    fetchUser();
+  }, []);
 
-  // Performansı optimize etmek için değeri memoize edelim
-  const value = useMemo(() => ({ user, login, logout }), [user]);
+  const login = (userData: any) => setUser(userData);
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    // İsteğe bağlı: Kullanıcıyı login sayfasına yönlendir
+  };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  const value = useMemo(
+    () => ({ user, login, logout, loading }),
+    [user, loading]
+  );
+
+  // loading false olana kadar alt bileşenleri render etme
+  return (
+    <AuthContext.Provider value={value}>
+      {!loading && children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {

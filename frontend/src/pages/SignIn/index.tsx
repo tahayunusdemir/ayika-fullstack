@@ -19,6 +19,10 @@ import AppTheme from '@/theme/shared-theme/AppTheme';
 import AppAppBar from '@/pages/MarketingPage/components/AppAppBar';
 import Grid from '@mui/material/Grid';
 import Diversity1Icon from '@mui/icons-material/Diversity1';
+import { useAuth } from '@/providers/AuthProvider';
+import { useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
+import Alert from '@mui/material/Alert';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -64,10 +68,19 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 
 export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [tcKimlikNoError, setTcKimlikNoError] = React.useState(false);
-  const [tcKimlikNoErrorMessage, setTcKimlikNoErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
+  const [tcKimlikNoErrorMessage, setTcKimlikNoErrorMessage] = React.useState('');
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [loading, setLoading] = React.useState(false);
+  const [errors, setErrors] = React.useState({
+    tcKimlikNo: '',
+    password: '',
+    form: '',
+  });
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -77,16 +90,52 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     setOpen(false);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (tcKimlikNoError || passwordError) {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
+    setLoading(true);
+    setErrors({
+      tcKimlikNo: '',
+      password: '',
+      form: '',
+    });
+
+    if (!validateInputs()) {
+      setLoading(false);
       return;
     }
+
     const data = new FormData(event.currentTarget);
-    console.log({
-      tcKimlikNo: data.get('tcKimlikNo'),
-      password: data.get('password'),
-    });
+    const tcKimlikNo = data.get('tcKimlikNo');
+    const password = data.get('password');
+
+    try {
+      // 1. Token al
+      const tokenResponse = await axios.post('http://127.0.0.1:8000/api/auth/token/', {
+        tc_kimlik_no: tcKimlikNo,
+        password,
+      });
+      
+      localStorage.setItem('accessToken', tokenResponse.data.access);
+      localStorage.setItem('refreshToken', tokenResponse.data.refresh);
+      
+      axios.defaults.headers.common['Authorization'] = `Bearer ${tokenResponse.data.access}`;
+
+      const userResponse = await axios.get('http://127.0.0.1:8000/api/auth/me/');
+      
+      login(userResponse.data);
+
+      navigate('/dashboard');
+
+    } catch (error: any) {
+      console.error('Giriş başarısız:', error.response?.data);
+      if (error.response?.data?.detail) {
+        setErrors((prev) => ({...prev, form: error.response.data.detail}));
+      } else {
+        setErrors((prev) => ({...prev, form: 'Giriş sırasında bir hata oluştu.'}));
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const validateInputs = () => {
@@ -129,6 +178,9 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
           >
             Giriş yap
           </Typography>
+          {location.state?.message && (
+            <Alert severity="success">{location.state.message}</Alert>
+          )}
           <Box
             component="form"
             onSubmit={handleSubmit}
@@ -186,7 +238,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               type="submit"
               fullWidth
               variant="contained"
-              onClick={validateInputs}
+              sx={{ mt: 3, mb: 2 }}
+              disabled={loading}
             >
               Giriş yap
             </Button>

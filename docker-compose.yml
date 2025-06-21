@@ -1,0 +1,41 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: ayika_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=ayika_db
+      - POSTGRES_USER=ayika_user
+      - POSTGRES_PASSWORD=ayika_password
+    ports:
+      - "5432:5432" # Sadece yerel istemci ile bağlanmak gerekirse
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ayika_user -d ayika_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: ./backend
+    container_name: ayika_web
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=your_development_secret_key_here
+      - DEBUG=True
+      - POSTGRES_DB=ayika_db
+      - POSTGRES_USER=ayika_user
+      - POSTGRES_PASSWORD=ayika_password
+      - POSTGRES_HOST=db
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: on-failure
+
+volumes:
+  postgres_data: 

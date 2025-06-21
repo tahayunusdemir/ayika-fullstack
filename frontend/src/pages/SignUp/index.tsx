@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
@@ -25,6 +25,7 @@ import Select from '@mui/material/Select';
 import KvkkModal from './components/KvkkModal';
 import GonullulukModal from './components/GonullulukModal';
 import FormGroup from '@mui/material/FormGroup';
+import axios from 'axios';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -71,6 +72,7 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
 
 export default function SignUp(props: { disableCustomTheme?: boolean }) {
   const [cities, setCities] = React.useState<{ id: number; name: string }[]>([]);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     fetch('/iller.json')
@@ -93,6 +95,8 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
   const [kvkkChecked, setKvkkChecked] = React.useState(false);
   const [gonullulukChecked, setGonullulukChecked] = React.useState(false);
   const [termsError, setTermsError] = React.useState(false);
+  const [errors, setErrors] = React.useState({});
+  const [loading, setLoading] = React.useState(false);
 
   const handleKvkkOpen = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
@@ -175,25 +179,73 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       setTermsError(false);
     }
 
-    return isValid;
+    return { isValid, errors: {} };
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!validateInputs()) {
+    setErrors({});
+    setLoading(true);
+  
+    const data = new FormData(event.currentTarget);
+    const password = data.get('password');
+    const confirmPassword = data.get('passwordConfirm');
+    const kvkkChecked = data.get('kvkk') === 'on';
+    const gonullulukChecked = data.get('gonulluluk') === 'on';
+  
+    let hasError = false;
+    const newErrors: { [key: string]: string } = {};
+  
+    if (password !== confirmPassword) {
+      newErrors.passwordConfirm = 'Şifreler eşleşmiyor.';
+      hasError = true;
+    }
+  
+    if (!kvkkChecked || !gonullulukChecked) {
+      newErrors.terms = 'Lütfen gerekli tüm onayları işaretleyin.';
+      hasError = true;
+    }
+  
+    const validation = validateInputs();
+    if (!validation.isValid) {
+      setErrors((prev) => ({ ...prev, ...validation.errors }));
+      hasError = true;
+    }
+  
+    if (hasError) {
+      setErrors((prev) => ({ ...prev, ...newErrors }));
+      setLoading(false);
       return;
     }
-    const data = new FormData(event.currentTarget);
-    console.log({
-      firstName: data.get('firstName'),
-      lastName: data.get('lastName'),
-      tcKimlikNo: data.get('tcKimlikNo'),
-      phone: data.get('phone'),
+  
+    const payload = {
+      first_name: data.get('firstName'),
+      last_name: data.get('lastName'),
+      tc_kimlik_no: data.get('tcKimlikNo'),
+      phone_number: data.get('phone'),
       city: data.get('city'),
       email: data.get('email'),
-      password: data.get('password'),
-      confirmPassword: data.get('confirmPassword'),
-    });
+      password: password,
+      password_confirm: confirmPassword,
+    };
+  
+    try {
+      // apiClient yerine doğrudan axios kullanılıyor çünkü henüz tam entegre edilmedi
+      const response = await axios.post('http://127.0.0.1:8000/api/auth/register/', payload);
+      console.log('Kayıt başarılı:', response.data);
+      // Kayıt sonrası giriş sayfasına yönlendir ve bir başarı mesajı göster
+      navigate('/signin', { state: { message: 'Kaydınız başarıyla oluşturuldu. Lütfen giriş yapın.' } });
+    } catch (error: any) {
+      console.error('Kayıt başarısız:', error.response?.data);
+      // Backend'den gelen hataları state'e alıp formda göster
+      if (error.response?.data && typeof error.response.data === 'object') {
+        setErrors(error.response.data);
+      } else {
+        setErrors({ form: 'Bilinmeyen bir hata oluştu.'})
+      }
+    } finally {
+      setLoading(false); // Yüklenme durumunu bitir
+    }
   };
 
   return (
@@ -330,10 +382,10 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
               <TextField
                 required
                 fullWidth
-                name="confirmPassword"
+                name="passwordConfirm"
                 placeholder="••••••"
                 type="password"
-                id="confirmPassword"
+                id="passwordConfirm"
                 autoComplete="new-password"
                 variant="outlined"
               />
@@ -403,6 +455,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
               fullWidth
               variant="contained"
               startIcon={<Diversity1Icon />}
+              disabled={loading}
             >
               Gönüllü Ol
             </Button>

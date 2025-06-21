@@ -10,6 +10,7 @@ import MenuContent from './MenuContent';
 import CardAlert from './CardAlert';
 import OptionsMenu from './OptionsMenu';
 import AyikaIcon from '@/pages/MarketingPage/components/AyikaIcon';
+import { useAuth } from '@/providers/AuthProvider';
 
 const drawerWidth = 240;
 
@@ -24,6 +25,8 @@ const Drawer = styled(MuiDrawer)({
 });
 
 export default function SideMenu() {
+  const { user } = useAuth();
+
   return (
     <Drawer
       variant="permanent"
@@ -60,17 +63,16 @@ export default function SideMenu() {
       >
         <Avatar
           sizes="small"
-          alt="Riley Carter"
-          sx={{ width: 36, height: 36 }}
+          alt={user ? `${user.first_name} ${user.last_name}` : ''}
         >
-          RC
+          {user ? `${user.first_name[0]}${user.last_name[0]}`.toUpperCase() : null}
         </Avatar>
         <Box sx={{ mr: 'auto' }}>
           <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
-            Riley Carter
+            {user ? `${user.first_name} ${user.last_name}` : 'Kullanıcı'}
           </Typography>
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            riley@email.com
+            {user ? user.email : 'Yükleniyor...'}
           </Typography>
         </Box>
         <OptionsMenu />
